@@ -13,12 +13,13 @@ namespace addQuiz
         public static int score =0;
 
 
-        public static int firstNumber = 0;
-        public static int secondnumber = 0;
+        public static double firstNumber = 0;
+        public static double secondnumber = 0;
         public static int opKey;
         public static string equation = "";
-        public static int response = 0;
-        public static int eqAnswer = 0;
+        public static double response = 0;
+        public static double eqAnswer = 0;
+        public static int numberOfQuestions = 3;
 
         public static Dictionary<int, string> dRandomOp = new Dictionary<int, string>();
      
@@ -41,7 +42,7 @@ namespace addQuiz
 
             //loop through all of the questions
             int i = 0;
-            while (i < 5)
+            while (i < numberOfQuestions)
             {
                 createCalculator();
                 Console.WriteLine(equation);
@@ -49,7 +50,7 @@ namespace addQuiz
                 //make sure the input is valid
                 var input = Console.ReadLine();
                 
-                while(!int.TryParse(input,out response))
+                while(!double.TryParse(input,out response))
                     {
                     Console.WriteLine("Invalid Input --Please resubmit.");
                     input = Console.ReadLine();
@@ -59,7 +60,13 @@ namespace addQuiz
                 i++;
             }
 
-            Console.WriteLine($"Quiz Summary: Score--{score}");
+
+            int incorrect = numberOfQuestions - score;
+            Console.WriteLine($@"
+            Quiz Summary for {playerName}:
+            
+            Number Correct -- {score}
+            Number Incorrect --{incorrect}");
             Console.WriteLine("Press ENTER to EXIT");
             Console.ReadLine();
             Environment.Exit(0);
@@ -76,7 +83,7 @@ namespace addQuiz
             Random rNumber = new Random();
             firstNumber=rNumber.Next(0, 100);
             secondnumber= rNumber.Next(0, 100);
-            opKey = rNumber.Next(1, 4);
+            opKey = rNumber.Next(1, 5);
 
             //get operator value
            if( dRandomOp.TryGetValue(opKey, out dValue))
@@ -85,19 +92,19 @@ namespace addQuiz
                 switch(opKey)
                 {
                     case 1:
-                    equation = $"What is {firstNumber} + {secondnumber}?";
-                        eqAnswer = firstNumber + secondnumber;
+                    equation = $"What is {firstNumber}  {dValue}  {secondnumber}?";
+                        eqAnswer = firstNumber / secondnumber;
                         break;
                     case 2:
-                        equation = $"What is {firstNumber} - {secondnumber}?";
+                        equation = $"What is {firstNumber} {dValue} {secondnumber}?";
                         eqAnswer = firstNumber - secondnumber;
                         break;
                     case 3:
-                        equation = $"What is {firstNumber} * {secondnumber}?";
+                        equation = $"What is {firstNumber} {dValue} {secondnumber}?";
                         eqAnswer = firstNumber * secondnumber;
                         break;
                     case 4:
-                        equation = $"What is {firstNumber} / {secondnumber}?";
+                        equation = $"What is {firstNumber} {dValue} {secondnumber}?";
                         eqAnswer = firstNumber / secondnumber;
                         break;
                     default:
@@ -116,7 +123,7 @@ namespace addQuiz
         //evaluateAnswer
         public static void evaluateAnswer()
         {
-            if (response == eqAnswer)
+            if (Math.Round(response,2) == Math.Round(eqAnswer,2))
             {
                 Console.WriteLine("You are correct!");
                 score++;
@@ -125,7 +132,7 @@ namespace addQuiz
             }
             else
             {
-                Console.WriteLine("Sorry, that is not the right answer");
+                Console.WriteLine($"Sorry, that is not the right answer. The answer is {eqAnswer}");
                // Console.ReadLine();
                 
             }
